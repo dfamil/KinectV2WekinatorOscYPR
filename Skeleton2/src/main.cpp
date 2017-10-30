@@ -12,8 +12,14 @@ int main( int argc, char* argv[] )
 {
 	OSCSendMessage message1;
 	string oscMessages = "/wekinator/control/setInputNames";
-	message1.setMesseageToSendNames(oscMessages, "HandLeftX", "HandLeftY", "HandLeftZ", "HandRightX4", "HandRightY5", "HandRightZ", "NeckX", "NeckY", "NeckZ",
-		"HandLeftYaw", "HandLeftPitch", "HandLeftRoll", "HandRightYaw", "HandRightPitch", "HandRightRoll", "NeckYaw", "NeckPitch", "NeckRoll");
+	message1.setMesseageToSendNames(oscMessages,
+		"HandLeftX", "HandLeftY", "HandLeftZ",
+		"HandRightX", "HandRightY","HandRightZ",
+		"NeckX", "NeckY", "NeckZ",
+		"HandLeftYaw", "HandLeftPitch", "HandLeftRoll",
+		"HandRightYaw", "HandRightPitch", "HandRightRoll",
+		"NeckYaw", "NeckPitch", "NeckRoll",
+		"HandRightState", "HandLeftState");
 
     try{
 

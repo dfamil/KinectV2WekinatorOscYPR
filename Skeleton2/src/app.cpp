@@ -360,6 +360,7 @@ inline void Kinect::drawBody()
 		int  HandLeftYaw = 0;
 		int  HandLeftPitch = 0;
 		int  HandLeftRoll = 0;
+		
 		//SpineMid
 		float ShoulderRightX = 0;
 		float ShoulderRightY = 0;
@@ -374,6 +375,7 @@ inline void Kinect::drawBody()
 		int HandRightYaw = 0;
 		int HandRightPitch = 0;
 		int HandRightRoll = 0;
+		
 		//SpineBase
 		float SpineShoulderX = 0;
 		float SpineShoulderY = 0;
@@ -381,6 +383,9 @@ inline void Kinect::drawBody()
 		int SpineShoulderYaw = 1;
 		int SpineShoulderPitch = 1;
 		int SpineShoulderRoll = 1;
+		
+
+
 		// ************ get and print screen coordinates of joints, and their euler angles relative to the parent joints 
 		for (int i = 0; i < 25; i++) {
 			ColorSpacePoint colorSpacePoint;
@@ -445,6 +450,8 @@ inline void Kinect::drawBody()
 					HandLeftYaw = Yaw[i];
 					HandLeftPitch = Pitch[i];
 					HandLeftRoll = Roll[i];
+
+					
 				}
 				else if (type == 8) {
 					//ShoulderRight
@@ -521,13 +528,17 @@ inline void Kinect::drawBody()
 				}
 			}
 		}
-
+		
 		OSCSendMessage message;
 		string oscMessages = "/wek/inputs";
-		message.setMesseageToSendData(oscMessages, HandLeftX, HandLeftY, HandLeftZ, HandRightX, HandRightY, HandRightZ, NeckX, NeckY, NeckZ,
-			HandLeftYaw, HandLeftPitch, HandLeftRoll, HandRightYaw, HandRightPitch, HandRightRoll, NeckYaw, NeckPitch, NeckRoll);
+		message.setMesseageToSendData(oscMessages, HandLeftX, HandLeftY, HandLeftZ, HandRightX, 
+			HandRightY, HandRightZ, NeckX, NeckY, NeckZ,
+			HandLeftYaw, HandLeftPitch, HandLeftRoll, HandRightYaw, 
+			HandRightPitch, HandRightRoll, NeckYaw, 
+			NeckPitch, NeckRoll, leftHandState, rightHandState);
 
-
+		cout << "leftHandState=" << leftHandState << " " << "rightHandState=" << rightHandState
+			<< " " << endl;
 
 		/*
 		// Retrieve Amount of Body Lean
@@ -595,6 +606,7 @@ inline void Kinect::drawHandState(cv::Mat& image, const Joint& joint, HandState 
 	if (handConfidence != TrackingConfidence::TrackingConfidence_High) {
 		return;
 	}
+	
 
 	// Draw Hand State 
 	const int radius = 75;
@@ -602,19 +614,51 @@ inline void Kinect::drawHandState(cv::Mat& image, const Joint& joint, HandState 
 	switch (handState) {
 		// Open
 	case HandState::HandState_Open:
+		cout << "open ";
 		drawEllipse(image, joint, radius, green, 5);
+		if (joint.JointType == 11) {
+			rightHandState = 0.0f;
+		}
+
+		if (joint.JointType == 7) {
+			leftHandState = 0.0f;
+		}
 		break;
 		// Close
 	case HandState::HandState_Closed:
+		cout << "closed ";
 		drawEllipse(image, joint, radius, red, 5);
+		if (joint.JointType == 11) {
+			rightHandState = 1.0f;
+		}
+
+		if (joint.JointType == 7) {
+				cout << "open ";
+			leftHandState = 1.0f;
+			
+		}
+		
+			
 		break;
 		// Lasso
 	case HandState::HandState_Lasso:
+		
+		
 		drawEllipse(image, joint, radius, blue, 5);
+		if (joint.JointType == 11) {
+			rightHandState = 2.0f;
+		}
+
+		if (joint.JointType == 7) {
+			leftHandState = 2.0f;
+		}
+
 		break;
 	default:
 		break;
 	}
+	
+	
 }
 
 // Show Data

@@ -31,6 +31,8 @@ private:
     std::vector<BYTE> colorBuffer;
     int colorWidth;
     int colorHeight;
+	float leftHandState;
+	float rightHandState;
     unsigned int colorBytesPerPixel;
     cv::Mat colorMat;
 

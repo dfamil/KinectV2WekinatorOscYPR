@@ -4,7 +4,7 @@
 
 #include "osc/OscOutboundPacketStream.h"
 #include "ip/UdpSocket.h"
-#define ADDRESS "192.168.2.2"
+#define ADDRESS "192.168.1.28"
 #define PORT 6448
 
 
@@ -17,10 +17,12 @@ using namespace osc;
 OSCSendMessage::OSCSendMessage()
 {
 }
-void OSCSendMessage::setMesseageToSendData(string  jointMessage_, float jointPosition_, float jointPosition1_, float jointPosition2_
-	, float jointPosition3_, float jointPosition4_, float jointPosition5_, float jointPosition6_, float jointPosition7_, float jointPosition8_,
-	float jointPosition9_, float jointPosition10_, float jointPosition11_, float jointPosition12_, float jointPosition13_, float jointPosition14_,
-	float jointPosition15_, float jointPosition16_, float jointPosition17_) {
+void OSCSendMessage::setMesseageToSendData(string  jointMessage_, float jointPosition_, float jointPosition1_,
+	float jointPosition2_, float jointPosition3_, float jointPosition4_, float jointPosition5_, float jointPosition6_,
+	float jointPosition7_, float jointPosition8_,float jointPosition9_, float jointPosition10_, float jointPosition11_, 
+	float jointPosition12_, float jointPosition13_, float jointPosition14_,
+	float jointPosition15_, float jointPosition16_, float jointPosition17_, 
+	float currentLeftHandState_, float currentRightHandState_) {
 	jointMessage = jointMessage_;
 	jointPosition = jointPosition_;
 	jointPosition1 = jointPosition1_;
@@ -40,21 +42,33 @@ void OSCSendMessage::setMesseageToSendData(string  jointMessage_, float jointPos
 	jointPosition15 = jointPosition15_;
 	jointPosition16 = jointPosition16_;
 	jointPosition17 = jointPosition17_;
-
+	//currentLeftHandState == currentLeftHandState_;
+	//currentRightHandState == currentRightHandState_;
+	cout << "currentLeftHandState=" << currentLeftHandState_ << " " << "currentRightHandState=" << currentRightHandState_
+		<< " " << endl;
 
 
 	osc::OutboundPacketStream p(buffer, OUTPUT_BUFFER_SIZE);
 	p << osc::BeginBundleImmediate
 		<< osc::BeginMessage(jointMessage.c_str())
-		<< Remap(jointPosition, -.5, .5, 0.0, 500.0)
-		<< Remap(jointPosition1, .3, -.3, 500, 0)
-		<< Remap(jointPosition2, .5, 1.0, 0.0, 500)
-		<< Remap(jointPosition3, -.5, .5, 0.0, 500)
-		<< Remap(jointPosition4, .3, -.3, 0, 500)
-		<< Remap(jointPosition5, -.5, 5, 0.0, 500)
-		<< Remap(jointPosition6, -.5, .5, 0.0, 500)
-		<< Remap(jointPosition7, .3, -.3, 0, 500)
-		<< Remap(jointPosition7, .5, 1.0, 0.0, 500)
+		/*<< Remap(jointPosition, -.5f, .5f, 0.0f, 500.0f)
+		<< Remap(jointPosition1, .3f, -.3f, 500.0f, 0.0f)
+		<< Remap(jointPosition2, .5f, 1.0f, 0.0f, 500.0f)
+		<< Remap(jointPosition3, -.5f, .5f, 0.0f, 500.0f)
+		<< Remap(jointPosition4, .3f, -.3f, 0, 500.0f)
+		<< Remap(jointPosition5, -.5f, 5.0f, 0.0f, 500.0f)
+		<< Remap(jointPosition6, -.5f, .5f, 0.0f, 500.0f)
+		<< Remap(jointPosition7, .3f, -.3f, 0.0f, 500.0f)
+		<< Remap(jointPosition8, .5f, 1.0f, 0.0f, 500.0f)*/
+		<< jointPosition
+		<< jointPosition1
+		<< jointPosition2
+		<< jointPosition3
+		<< jointPosition4
+		<< jointPosition5
+		<< jointPosition6
+		<< jointPosition7
+		<< jointPosition8
 		<< jointPosition9
 		<< jointPosition10
 		<< jointPosition11
@@ -64,6 +78,8 @@ void OSCSendMessage::setMesseageToSendData(string  jointMessage_, float jointPos
 		<< jointPosition15
 		<< jointPosition16
 		<< jointPosition17
+		<< currentLeftHandState_
+	    << currentRightHandState_
 		<< osc::EndMessage
 		<< osc::EndBundle;
 	transmitSocket.Send(p.Data(), p.Size());
@@ -72,7 +88,7 @@ void OSCSendMessage::setMesseageToSendData(string  jointMessage_, float jointPos
 void OSCSendMessage::setMesseageToSendNames(string  jointMessage_, string jointName_, string jointName1_, string jointName2_
 	, string jointName3_, string jointName4_, string jointName5_, string jointName6_, string jointName7_, string jointName8_,
 	string jointName9_, string jointName10_, string jointName11_, string jointName12_, string jointName13_, string jointName14_,
-	string jointName15_, string jointName16_, string jointName17_) {
+	string jointName15_, string jointName16_, string jointName17_, string rightStateName_, string leftStateName_) {
 	jointMessage = jointMessage_;
 	jointName = jointName_;
 	jointName1 = jointName1_;
@@ -92,6 +108,8 @@ void OSCSendMessage::setMesseageToSendNames(string  jointMessage_, string jointN
 	jointName15 = jointName15_;
 	jointName16 = jointName16_;
 	jointName17 = jointName17_;
+	rightStateName = rightStateName_;
+	leftStateName = leftStateName_;
 
 
 	osc::OutboundPacketStream p(buffer, OUTPUT_BUFFER_SIZE);
@@ -115,6 +133,8 @@ void OSCSendMessage::setMesseageToSendNames(string  jointMessage_, string jointN
 		<< jointName15.c_str()
 		<< jointName16.c_str()
 		<< jointName17.c_str()
+		<< rightStateName.c_str()
+		<< leftStateName.c_str()
 		<< osc::EndMessage
 		<< osc::EndBundle;
 	transmitSocket.Send(p.Data(), p.Size());
